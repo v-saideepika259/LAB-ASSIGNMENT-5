@@ -1,0 +1,409 @@
+1.Write a c program to reverse a string using stack?
+#include<stdio.h>
+#include<string.h>
+#define MAX 20
+
+int top = -1;
+char stack[MAX];
+
+char push(char item)
+{
+	if(top == (MAX-1))
+		printf("Stack Overflow\n");
+	else
+		stack[++top] =item;
+}
+
+char pop()
+{
+	if(top == -1)
+		printf("Stack Underflow\n");
+	else
+		return stack[top--];
+}
+
+main()
+{
+	char str[20];
+	int i;
+	printf("Enter the string : " );
+	gets(str);
+	for(i=0;i<strlen(str);i++)
+		push(str[i]);
+	for(i=0;i<strlen(str);i++)
+		str[i]=pop();
+	printf("Reversed string is : ");
+	puts(str);
+}
+Output
+Enter a String: hello world
+Reversed String:dlrow olleh
+
+
+2.write a c program for infix to postfix conversion using stack?
+#include <stdio.h>
+#include <ctype.h>
+#define SIZE 50            
+
+char stack[SIZE];
+int top=-1;       
+ 
+push(char elem)
+{                       
+    stack[++top]=elem;
+}
+ 
+char pop()
+{                      
+    return(stack[top--]);
+}
+ 
+int pr(char symbol)
+{                 
+    
+	if(symbol == '^')
+	{
+		return(3);
+	}
+	else if(symbol == '*' || symbol == '/')
+	{
+		return(2);
+	}
+	else if(symbol == '+' || symbol == '-')          
+	{
+		return(1);
+	}
+	else
+	{
+		return(0);
+	}
+}
+
+void main()
+{                        
+    char infix[50],postfix[50],ch,elem;
+    int i=0,k=0;
+    printf("Enter Infix Expression : ");
+    scanf("%s",infix);
+    push('#');
+    while( (ch=infix[i++]) != '\0')
+    {
+        if( ch == '(') push(ch);
+        else
+            if(isalnum(ch)) postfix[k++]=ch;
+            else
+                if( ch == ')')
+                {
+                    while( stack[top] != '(')
+                        postfix[k++]=pop();
+                    elem=pop(); 
+                }
+                else
+                {       
+                    while( pr(stack[top]) >= pr(ch) )
+                        postfix[k++]=pop();
+                    push(ch);
+                }
+    }
+    while( stack[top] != '#')     
+        postfix[k++]=pop();
+    postfix[k]='\0';          
+    printf("\nPostfix Expression =  %s\n",postfix);
+}
+Output:
+Enter Infix Expression: x^y/(5*z)+2
+post fix expression=xy^5z*/2+
+
+
+3.Write a c program to implement queue using two stacks?
+#include <stdio.h>
+#include <stdlib.h>
+struct node
+{
+    int data;
+    struct node *next;
+};
+void push(struct node** top, int data);
+int pop(struct node** top);
+struct queue
+{
+    struct node *stack1;
+    struct node *stack2;
+};
+void enqueue(struct queue *q, int x)
+{
+    push(&q->stack1, x);
+}
+void dequeue(struct queue *q)
+{
+    int x;
+    if (q->stack1 == NULL && q->stack2 == NULL) {
+        printf("queue is empty");
+        return;
+    }
+    if (q->stack2 == NULL) {
+        while (q->stack1 != NULL) {
+        x = pop(&q->stack1);
+        push(&q->stack2, x);
+        }
+    }
+    x = pop(&q->stack2);
+    printf("%d\n", x);
+}
+void push(struct node** top, int data)
+{
+    struct node* newnode = (struct node*) malloc(sizeof(struct node));
+        if (newnode == NULL) {
+            printf("Stack overflow \n");
+            return;
+        }
+    newnode->data = data;
+    newnode->next = (*top);
+    (*top) = newnode;
+}
+int pop(struct node** top)
+{
+    int buff;
+    struct node *t;
+    if (*top == NULL) {
+        printf("Stack underflow \n");
+        return 0;
+    }
+    else {
+        t = *top;
+        buff = t->data;
+        *top = t->next;
+        free(t);
+        return buff;
+    }
+}
+void display(struct node *top1,struct node *top2)
+{
+    while (top1 != NULL) {
+        printf("%d\n", top1->data);
+        top1 = top1->next;
+    }
+    while (top2 != NULL) {
+        printf("%d\n", top2->data);
+        top2 = top2->next;
+    }
+}
+int main()
+{
+    struct queue q = (struct queue)malloc(sizeof(struct queue));
+    int f = 0, a;
+    char ch = 'y';
+    q->stack1 = NULL;
+    q->stack2 = NULL;
+    while (ch == 'y'||ch == 'Y') {
+        printf("enter ur choice\n1.add to queue\n2.remove from queue\n3.display\n4.exit\n");
+        scanf("%d", &f);
+        switch(f) {
+            case 1 : printf("enter the element to be added to queue\n");
+                     scanf("%d", &a);
+                     enqueue(q, a);
+                     break;
+            case 2 : dequeue(q);
+                     break;
+            case 3 : display(q->stack1, q->stack2);
+                     break;
+            case 4 : exit(1);
+                     break;
+            default : printf("invalid\n");
+                      break;
+        }
+    }
+}
+Output:
+enter your choice:
+1.add to queue:
+2.remove from queue:
+3.display:
+4.exit:
+1
+enter the element to be added to queue
+2
+enter your choice:
+1.add to queue:
+2.remove from queue:
+3.display:
+4.exit:
+1
+enter the element to be added to queue
+5
+enter your choice:
+1.add to queue:
+2.remove from queue:
+3.display:
+4.exit:
+3
+5
+2
+enter your choice:
+1.add to queue:
+2.remove from queue:
+3.display:
+4.exit:
+
+
+4.write a c program for insertion and deletion of bst?
+#include <stdio.h>  
+#include <stdlib.h>  
+#include <stdbool.h>  
+   
+struct node{  
+    int data;  
+    struct node *left;  
+    struct node *right;  
+};  
+   
+struct node *root= NULL;  
+   
+struct node* createNode(int data){  
+
+    struct node newNode = (struct node)malloc(sizeof(struct node));  
+ 
+    newNode->data= data;  
+    newNode->left = NULL;  
+    newNode->right = NULL;  
+      
+    return newNode;  
+}  
+   
+void insert(int data) {  
+    
+    struct node *newNode = createNode(data);  
+      
+    if(root == NULL){  
+        root = newNode;  
+        return;  
+      }  
+    else {  
+         
+        struct node *current = root, *parent = NULL;  
+          
+        while(true) {  
+            
+            parent = current;  
+   
+            if(data < current->data) {  
+                current = current->left;  
+                if(current == NULL) {  
+                    parent->left = newNode;  
+                    return;  
+                }  
+            }  
+              
+            else {  
+                current = current->right;  
+                if(current == NULL) {  
+                    parent->right = newNode;  
+                    return;  
+                }  
+            }  
+        }  
+    }  
+}  
+   
+struct node* minNode(struct node *root) {  
+    if (root->left != NULL)  
+        return minNode(root->left);  
+    else   
+        return root;  
+}   
+   
+struct node* deleteNode(struct node *node, int value) 
+{  
+    if(node == NULL){  
+          return NULL;  
+     }  
+    else {  
+        
+        if(value < node->data)
+        {
+            node->left = deleteNode(node->left, value);  
+        } 
+        else if(value > node->data)
+        {
+            node->right = deleteNode(node->right, value);  
+        } 
+        else if(node->left == NULL && node->right == NULL)
+        {
+                node = NULL;  
+         }
+           
+        else if(node->left == NULL)
+        { 
+                node = node->right;  
+            }  
+              
+        else if(node->right == NULL)
+        {  
+                node = node->left;  
+            }  
+            
+        else {  
+                
+                struct node *temp = minNode(node->right);  
+                node->data = temp->data;  
+                node->right = deleteNode(node->right, temp->data);  
+            }  
+        }  
+return node;  
+    }  
+  
+   
+void inorderTraversal(struct node *node) {  
+        
+    if(root == NULL){  
+        printf("Tree is empty\n");  
+          return;  
+     }  
+    else {  
+            
+        if(node->left!= NULL)  
+            inorderTraversal(node->left);  
+        printf("%d ", node->data);  
+        if(node->right!= NULL)  
+          inorderTraversal(node->right);  
+            
+    }        
+}  
+        
+int main()  
+{  
+    
+    insert(50);  
+    insert(30);  
+    insert(70);  
+    insert(60);  
+    insert(10);  
+    insert(90);  
+      
+    printf("Binary search tree after insertion: \n");  
+    inorderTraversal(root);  
+      
+    struct node *deletedNode = NULL;  
+    deletedNode = deleteNode(root, 90);  
+    printf("\nBinary search tree after deleting node 90: \n");  
+    inorderTraversal(root);  
+      
+    deletedNode = deleteNode(root, 30);  
+    printf("\nBinary search tree after deleting node 30: \n");  
+    inorderTraversal(root);  
+      
+    deletedNode = deleteNode(root, 50);  
+    printf("\nBinary search tree after deleting node 50: \n");  
+    inorderTraversal(root);  
+   
+    return 0;  
+}
+OUTPUT:
+Binary Search tree after insertion:
+10 30 50 60 70 90
+Binary Search tree after deleting node 90:
+10 30 50 60 70
+Binary Search tree after deletion node 30:
+10 50 60 70
+Binary Search tree after deletion node 50:
+10 60 70
